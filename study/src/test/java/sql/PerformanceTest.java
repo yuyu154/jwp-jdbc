@@ -39,8 +39,11 @@ public class PerformanceTest {
                 .executeForObject(sql2, (RowMapper<Object>) resultSet -> resultSet.getString(1)))
                 .isEqualTo("19.2");
 
-        assertTimeout(Duration.ofMillis(200L), () -> {
+        assertTimeout(Duration.ofMillis(100L), () -> {
             jdbcTemplate.executeForObject(sql1, resultSet -> null);
+        });
+
+        assertTimeout(Duration.ofMillis(100L), () -> {
             jdbcTemplate.executeForObject(sql2, resultSet -> null);
         });
     }
@@ -53,9 +56,8 @@ public class PerformanceTest {
                 "GROUP BY DevType";
 
         assertThat(
-                jdbcTemplate.executeForObject(
-                        sql,
-                        (RowMapper<Double>) resultSet -> resultSet.getDouble("avgYearsCodingProf"),
+                jdbcTemplate.executeForObject(sql, (RowMapper<Double>) resultSet -> resultSet.getDouble(
+                        "avgYearsCodingProf"),
                         "Engineering manager")
         ).isEqualTo(10.2);
 
